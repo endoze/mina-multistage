@@ -27,6 +27,8 @@ end
 namespace :multistage do
   desc "Create development, staging, and production stage files"
   task :create_stagefiles do
+    Dir.mkdir location if !File.exists? location
+
     %w{ development staging production }.each do |stage|
       stagefile = File.join(location, "#{stage}.rb")
       if !File.exists?(stagefile)

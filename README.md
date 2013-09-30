@@ -1,4 +1,5 @@
-[![Stories in Ready](https://badge.waffle.io/Endoze/mina-multistage.png?label=ready)](https://waffle.io/Endoze/mina-multistage)  
+[![Gem Version](https://badge.fury.io/rb/mina-multistage.png)](http://badge.fury.io/rb/mina-multistage) [![Stories in Ready](https://badge.waffle.io/Endoze/mina-multistage.png?label=ready)](https://waffle.io/Endoze/mina-multistage)  
+
 # Mina::Multistage
 
 Plugin for Mina that adds support for multiple stages.

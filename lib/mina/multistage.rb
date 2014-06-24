@@ -26,7 +26,7 @@ end
 
 namespace :multistage do
   desc "Create development, staging, and production stage files"
-  task :create_stagefiles do
+  task :init do
     Dir.mkdir location if !File.exists? location
 
     %w{ development staging production }.each do |stage|

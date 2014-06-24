@@ -28,6 +28,7 @@ namespace :multistage do
           f.puts "set :repository, ''"
           f.puts "set :branch, ''"
           f.puts "set :user, ''"
+          f.puts "set :rails_env, '#{stage}'"
         end
       end
     end

@@ -1,6 +1,7 @@
 require 'fileutils'
 
-location = fetch(:stage_dir, 'config/deploy')
+default_stage = fetch(:default_stage, 'staging')
+location = fetch(:stages_dir, 'config/deploy')
 
 unless exists?(:stages)
   set :stages, Dir["#{location}/*.rb"].map { |f| File.basename(f, '.rb') }
@@ -9,10 +10,14 @@ end
 stages.each do |name|
   desc "Set the target stage to `#{name}'."
   task(name) do
-    set :stage, name.to_sym
+    set :stage, name
     file = "#{location}/#{stage}.rb"
     load file
   end
+end
+
+unless stages.include?(ARGV.first)
+  invoke default_stage
 end
 
 namespace :multistage do

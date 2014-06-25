@@ -1,35 +1,30 @@
 require 'fileutils'
 
-location = fetch(:stage_dir, "config/deploy")
+default_stage = fetch(:default_stage, 'staging')
+location = fetch(:stages_dir, 'config/deploy')
 
 unless exists?(:stages)
-  set :stages, Dir["#{location}/*.rb"].map { |f| File.basename(f, ".rb") }
+  set :stages, Dir["#{location}/*.rb"].map { |f| File.basename(f, '.rb') }
 end
 
 stages.each do |name|
   desc "Set the target stage to `#{name}'."
   task(name) do
-    set :stage, name.to_sym
-
+    set :stage, name
     file = "#{location}/#{stage}.rb"
     load file
   end
 end
 
-if stages && stages.count > 0
-  if stages.include? 'development'
-    invoke :development
-  else
-    invoke stages.first
-  end
+unless stages.include?(ARGV.first)
+  invoke default_stage
 end
 
 namespace :multistage do
-  desc "Create development, staging, and production stage files"
-  task :create_stagefiles do
-    Dir.mkdir location if !File.exists? location
-
-    %w{ development staging production }.each do |stage|
+  desc 'Create staging and production stage files'
+  task :init do
+    Dir.mkdir_p location if !File.exists? location
+    %w{staging production}.each do |stage|
       stagefile = File.join(location, "#{stage}.rb")
       if !File.exists?(stagefile)
         File.open(stagefile, 'w') do |f|
@@ -38,6 +33,7 @@ namespace :multistage do
           f.puts "set :repository, ''"
           f.puts "set :branch, ''"
           f.puts "set :user, ''"
+          f.puts "set :rails_env, '#{stage}'"
         end
       end
     end

@@ -1,15 +1,17 @@
 [![Gem Version](https://badge.fury.io/rb/mina-multistage.png)](http://badge.fury.io/rb/mina-multistage) [![Stories in Ready](https://badge.waffle.io/Endoze/mina-multistage.png?label=ready)](https://waffle.io/Endoze/mina-multistage)  
 
+
 # Mina::Multistage
 
 Plugin for Mina that adds support for multiple stages.
 
-## Installation
+
+## Installation & Usage
 
 Add this line to your application's Gemfile:
 
 ```rb
-gem 'mina-multistage', required: false
+gem 'mina-multistage', require: false
 ```
 
 And then execute:
@@ -24,67 +26,66 @@ Or install it yourself as:
 $ gem install mina-multistage
 ```
 
-And finally add this line to your config/deploy.rb:
+Require `mina/multistage` in `config/deploy.rb`:
 
 ```rb
 require 'mina/multistage'
-```
-
-## Usage
-
-A sample config/deploy.rb could look something like this:
-
-
-```rb
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
-require 'mina/rvm'
-require 'mina/multistage'
 
-set :shared_paths, ['config/database.yml', 'log', 'tmp/sockets', 'pid/pids']
+...
 
-task :setup => :environment do
-  queue! %[mkdir -p "#{deploy_to}/shared/log"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
-
-  queue! %[mkdir -p "#{deploy_to}/shared/config"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
-
-  queue! %[mkdir -p "#{deploy_to}/shared/tmp/sockets"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/sockets"]
-
-  queue! %[mkdir -p "#{deploy_to}/shared/pid/pids"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/pid/pids"]
-
-  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
-  queue  %[#-----> Be sure to edit 'shared/config/database.yml'.]
+task setup: :environment do
+  ...
 end
 
-desc "Deploys the current version to the server."
-task :deploy => :environment do
-  deploy do
-    invoke :'git:clone'
-    invoke :'deploy:link_shared_paths'
-    invoke :'bundle:install'
-    invoke :'rails:db_migrate'
-    invoke :'rails:assets_precompile'
-
-    to :launch do
-      queue "bundle exec thin restart -C #{deploy_to}/shared/config/thin.yml"
-    end
-  end
+desc 'Deploys the current version to the server.'
+task deploy: :environment do
+  ...
 end
 ```
 
-And a sample development.rb stagefile:
+Then run:
+
+```shell
+$ mina multistage:init
+```
+
+It will create `config/deploy/staging.rb` and `config/deploy/production.rb` stage files.
+Use them to define stage-specific configuration.
+
 ```rb
-set :domain, 'localhost'
+# config/deploy/staging.rb
+set :domain, 'example.com'
 set :deploy_to, '/var/www/my_app'
-set :repository, 'https://github.com/gitlabhq/gitlabhq'
-set :branch, '6-1-stable'
-set :user, 'deploy'
+set :repository, 'https://github.com/user/repo'
+set :branch, 'master'
+set :user, 'www'
+set :rails_env, 'staging'
 ```
+
+Now deploy `staging` with:
+
+```shell
+$ mina deploy
+```
+
+Or specify a stage explicitly:
+
+```shell
+$ mina staging deploy
+$ mina production deploy
+```
+
+
+## Configuration
+
+* `stages` - array of stages names, default is names of all `*.rb` files from `stages_dir`
+* `stages_dir` - stages files directory, default is `config/deploy`
+* `default_stage` - default stage, default is `staging`
+
+If you want to override default values of these options, they should be set before requiring `mina/multistage` file.
 
 ## Contributing
 

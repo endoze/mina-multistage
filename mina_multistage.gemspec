@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["Chris@WideEyeLabs.com"]
   spec.description   = %q{Adds multistage capabilities to Mina}
   spec.summary       = %q{Adds multistage capabilities to Mina}
-  spec.homepage      = ""
+  spec.homepage      = "http://endoze.github.io/mina-multistage/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

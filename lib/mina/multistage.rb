@@ -3,6 +3,10 @@ def _default_stage
   fetch(:default_stage, 'staging')
 end
 
+def _default_stages
+  fetch(:stages, %w(staging production))
+end
+
 def _stages_dir
   fetch(:stages_dir, 'config/deploy')
 end
@@ -16,7 +20,7 @@ def _file_for_stage(stage_name)
 end
 
 def _stage_file_exists?(stage_name)
-  File.exists?(_file_for_stage(stage_name))
+  File.exists?(File.expand_path(_file_for_stage(stage_name)))
 end
 
 def _get_all_stages
@@ -41,12 +45,13 @@ end
 invoke _default_stage if _stage_file_exists?(_default_stage) && !_argument_included_in_stages?(ARGV.first)
 
 namespace :multistage do
-  desc 'Create staging and production stage files'
+  desc 'Create stage files'
   task :init do
     FileUtils.mkdir_p _stages_dir if !File.exists? _stages_dir
-    %w{staging production}.each do |stage|
+    _default_stages.each do |stage|
       stagefile = _file_for_stage(stage)
-      if !_stage_file_exists?(stagefile)
+      if !_stage_file_exists?(stage)
+        puts "Creating #{stagefile}"
         File.open(stagefile, 'w') do |f|
           f.puts "set :domain, ''"
           f.puts "set :deploy_to, ''"
@@ -54,6 +59,8 @@ namespace :multistage do
           f.puts "set :branch, ''"
           f.puts "set :user, ''"
         end
+      else
+        puts "Skipping #{stagefile}, it already exists"
       end
     end
   end

@@ -26,7 +26,7 @@ Or install it yourself as:
 $ gem install mina-multistage
 ```
 
-Require `mina/multistage` in `config/deploy.rb`:
+Require `mina/multistage` in your `config/deploy.rb`:
 
 ```rb
 require 'mina/multistage'
@@ -49,11 +49,20 @@ end
 Then run:
 
 ```shell
-$ mina multistage:init
+$ bundle exec mina multistage:init
 ```
 
-It will create `config/deploy/staging.rb` and `config/deploy/production.rb` stage files.
-Use them to define stage-specific configuration.
+This will create `config/deploy/staging.rb` and `config/deploy/production.rb` stage files.
+Use them to define stage specific configuration.
+
+If you receive the following error, make sure that you've required 'mina/multistage' in
+your `config/deploy.rb`
+
+```shell
+$ bundle exec mina multistage:init
+mina aborted!
+Don't know how to build task 'multistage:init'
+```
 
 ```rb
 # config/deploy/staging.rb
@@ -65,10 +74,10 @@ set :user, 'www'
 set :rails_env, 'staging'
 ```
 
-Now deploy `staging` with:
+Now you can deploy the default stage with:
 
 ```shell
-$ mina deploy
+$ mina deploy # this deploys staging by default
 ```
 
 Or specify a stage explicitly:
@@ -81,11 +90,36 @@ $ mina production deploy
 
 ## Configuration
 
-* `stages` - array of stages names, default is names of all `*.rb` files from `stages_dir`
-* `stages_dir` - stages files directory, default is `config/deploy`
-* `default_stage` - default stage, default is `staging`
+* `stages` - array of stages names, the default is the name of all `*.rb` files from `stages_dir`
+* `stages_dir` - stages files directory, the default is `config/deploy`
+* `default_stage` - default stage, the default is `staging`
 
-If you want to override default values of these options, they should be set before requiring `mina/multistage` file.
+If you want to override the default values for any of these options, they should be set before requiring `mina/multistage`.
+
+```rb
+# config/deploy.rb
+
+set stages, %w(development test staging production)
+set stages_dir, 'config/deploy_stages'
+set default_stage, 'development'
+
+require 'mina/multistage'
+require 'mina/bundler'
+require 'mina/rails'
+require 'mina/git'
+
+...
+
+task setup: :environment do
+  ...
+end
+
+desc 'Deploys the current version to the server.'
+task deploy: :environment do
+  ...
+end
+```
+
 
 ## Contributing
 

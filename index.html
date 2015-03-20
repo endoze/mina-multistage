@@ -50,7 +50,7 @@
 
 <div class="highlight highlight-shell"><pre>$ gem install mina-multistage</pre></div>
 
-<p>Require <code>mina/multistage</code> in <code>config/deploy.rb</code>:</p>
+<p>Require <code>mina/multistage</code> in your <code>config/deploy.rb</code>:</p>
 
 <div class="highlight highlight-rb"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/multistage<span class="pl-pds">'</span></span>
 <span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/bundler<span class="pl-pds">'</span></span>
@@ -70,10 +70,17 @@ task <span class="pl-c1">deploy:</span> <span class="pl-c1">:environment</span> 
 
 <p>Then run:</p>
 
-<div class="highlight highlight-shell"><pre>$ mina multistage:init</pre></div>
+<div class="highlight highlight-shell"><pre>$ bundle <span class="pl-c1">exec</span> mina multistage:init</pre></div>
 
-<p>It will create <code>config/deploy/staging.rb</code> and <code>config/deploy/production.rb</code> stage files.
-Use them to define stage-specific configuration.</p>
+<p>This will create <code>config/deploy/staging.rb</code> and <code>config/deploy/production.rb</code> stage files.
+Use them to define stage specific configuration.</p>
+
+<p>If you receive the following error, make sure that you've required 'mina/multistage' in
+your <code>config/deploy.rb</code></p>
+
+<div class="highlight highlight-shell"><pre>$ bundle <span class="pl-c1">exec</span> mina multistage:init
+mina aborted<span class="pl-k">!</span>
+Don<span class="pl-s"><span class="pl-pds">'</span>t know how to build task <span class="pl-pds">'</span></span>multistage:init<span class="pl-s"><span class="pl-pds">'</span></span></pre></div>
 
 <div class="highlight highlight-rb"><pre><span class="pl-c"># config/deploy/staging.rb</span>
 set <span class="pl-c1">:domain</span>, <span class="pl-s"><span class="pl-pds">'</span>example.com<span class="pl-pds">'</span></span>
@@ -83,9 +90,9 @@ set <span class="pl-c1">:branch</span>, <span class="pl-s"><span class="pl-pds">
 set <span class="pl-c1">:user</span>, <span class="pl-s"><span class="pl-pds">'</span>www<span class="pl-pds">'</span></span>
 set <span class="pl-c1">:rails_env</span>, <span class="pl-s"><span class="pl-pds">'</span>staging<span class="pl-pds">'</span></span></pre></div>
 
-<p>Now deploy <code>staging</code> with:</p>
+<p>Now you can deploy the default stage with:</p>
 
-<div class="highlight highlight-shell"><pre>$ mina deploy</pre></div>
+<div class="highlight highlight-shell"><pre>$ mina deploy <span class="pl-c"># this deploys staging by default</span></pre></div>
 
 <p>Or specify a stage explicitly:</p>
 
@@ -97,17 +104,39 @@ $ mina production deploy</pre></div>
 
 <ul>
 <li>
-<code>stages</code> - array of stages names, default is names of all <code>*.rb</code> files from <code>stages_dir</code>
+<code>stages</code> - array of stages names, the default is the name of all <code>*.rb</code> files from <code>stages_dir</code>
 </li>
 <li>
-<code>stages_dir</code> - stages files directory, default is <code>config/deploy</code>
+<code>stages_dir</code> - stages files directory, the default is <code>config/deploy</code>
 </li>
 <li>
-<code>default_stage</code> - default stage, default is <code>staging</code>
+<code>default_stage</code> - default stage, the default is <code>staging</code>
 </li>
 </ul>
 
-<p>If you want to override default values of these options, they should be set before requiring <code>mina/multistage</code> file.</p>
+<p>If you want to override the default values for any of these options, they should be set before requiring <code>mina/multistage</code>.</p>
+
+<div class="highlight highlight-rb"><pre><span class="pl-c"># config/deploy.rb</span>
+
+set stages, <span class="pl-s"><span class="pl-pds">%w(</span>development test staging production<span class="pl-pds">)</span></span>
+set stages_dir, <span class="pl-s"><span class="pl-pds">'</span>config/deploy_stages<span class="pl-pds">'</span></span>
+set default_stage, <span class="pl-s"><span class="pl-pds">'</span>development<span class="pl-pds">'</span></span>
+
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/multistage<span class="pl-pds">'</span></span>
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/bundler<span class="pl-pds">'</span></span>
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/rails<span class="pl-pds">'</span></span>
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/git<span class="pl-pds">'</span></span>
+
+...
+
+task <span class="pl-c1">setup:</span> <span class="pl-c1">:environment</span> <span class="pl-k">do</span>
+  ...
+<span class="pl-k">end</span>
+
+desc <span class="pl-s"><span class="pl-pds">'</span>Deploys the current version to the server.<span class="pl-pds">'</span></span>
+task <span class="pl-c1">deploy:</span> <span class="pl-c1">:environment</span> <span class="pl-k">do</span>
+  ...
+<span class="pl-k">end</span></pre></div>
 
 <h2>
 <a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>

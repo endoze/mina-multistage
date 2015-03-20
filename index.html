@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mina-Multistage by endoze</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mina-Multistage</h1>
+        <p>Plugin for Mina that adds support for multiple stages.</p>
+
+        <p class="view"><a href="https://github.com/endoze/mina-multistage">View the Project on GitHub <small>endoze/mina-multistage</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/endoze/mina-multistage/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/endoze/mina-multistage/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/endoze/mina-multistage">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><a href="http://badge.fury.io/rb/mina-multistage"><img src="https://badge.fury.io/rb/mina-multistage.png" alt="Gem Version"></a> <a href="https://waffle.io/Endoze/mina-multistage"><img src="https://badge.waffle.io/Endoze/mina-multistage.png?label=ready" alt="Stories in Ready"></a>  </p>
+
+<h1>
+<a id="minamultistage" class="anchor" href="#minamultistage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mina::Multistage</h1>
+
+<p>Plugin for Mina that adds support for multiple stages.</p>
+
+<h2>
+<a id="installation--usage" class="anchor" href="#installation--usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation &amp; Usage</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<div class="highlight highlight-rb"><pre><span class="pl-k">gem</span> <span class="pl-s"><span class="pl-pds">'</span>mina-multistage<span class="pl-pds">'</span></span>, <span class="pl-c1">require:</span> <span class="pl-c1">false</span></pre></div>
+
+<p>And then execute:</p>
+
+<div class="highlight highlight-shell"><pre>$ bundle</pre></div>
+
+<p>Or install it yourself as:</p>
+
+<div class="highlight highlight-shell"><pre>$ gem install mina-multistage</pre></div>
+
+<p>Require <code>mina/multistage</code> in <code>config/deploy.rb</code>:</p>
+
+<div class="highlight highlight-rb"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/multistage<span class="pl-pds">'</span></span>
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/bundler<span class="pl-pds">'</span></span>
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/rails<span class="pl-pds">'</span></span>
+<span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/git<span class="pl-pds">'</span></span>
+
+...
+
+task <span class="pl-c1">setup:</span> <span class="pl-c1">:environment</span> <span class="pl-k">do</span>
+  ...
+<span class="pl-k">end</span>
+
+desc <span class="pl-s"><span class="pl-pds">'</span>Deploys the current version to the server.<span class="pl-pds">'</span></span>
+task <span class="pl-c1">deploy:</span> <span class="pl-c1">:environment</span> <span class="pl-k">do</span>
+  ...
+<span class="pl-k">end</span></pre></div>
+
+<p>Then run:</p>
+
+<div class="highlight highlight-shell"><pre>$ mina multistage:init</pre></div>
+
+<p>It will create <code>config/deploy/staging.rb</code> and <code>config/deploy/production.rb</code> stage files.
+Use them to define stage-specific configuration.</p>
+
+<div class="highlight highlight-rb"><pre><span class="pl-c"># config/deploy/staging.rb</span>
+set <span class="pl-c1">:domain</span>, <span class="pl-s"><span class="pl-pds">'</span>example.com<span class="pl-pds">'</span></span>
+set <span class="pl-c1">:deploy_to</span>, <span class="pl-s"><span class="pl-pds">'</span>/var/www/my_app<span class="pl-pds">'</span></span>
+set <span class="pl-c1">:repository</span>, <span class="pl-s"><span class="pl-pds">'</span>https://github.com/user/repo<span class="pl-pds">'</span></span>
+set <span class="pl-c1">:branch</span>, <span class="pl-s"><span class="pl-pds">'</span>master<span class="pl-pds">'</span></span>
+set <span class="pl-c1">:user</span>, <span class="pl-s"><span class="pl-pds">'</span>www<span class="pl-pds">'</span></span>
+set <span class="pl-c1">:rails_env</span>, <span class="pl-s"><span class="pl-pds">'</span>staging<span class="pl-pds">'</span></span></pre></div>
+
+<p>Now deploy <code>staging</code> with:</p>
+
+<div class="highlight highlight-shell"><pre>$ mina deploy</pre></div>
+
+<p>Or specify a stage explicitly:</p>
+
+<div class="highlight highlight-shell"><pre>$ mina staging deploy
+$ mina production deploy</pre></div>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<ul>
+<li>
+<code>stages</code> - array of stages names, default is names of all <code>*.rb</code> files from <code>stages_dir</code>
+</li>
+<li>
+<code>stages_dir</code> - stages files directory, default is <code>config/deploy</code>
+</li>
+<li>
+<code>default_stage</code> - default stage, default is <code>staging</code>
+</li>
+</ul>
+
+<p>If you want to override default values of these options, they should be set before requiring <code>mina/multistage</code> file.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/endoze">endoze</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

@@ -55,15 +55,6 @@ $ bundle exec mina multistage:init
 This will create `config/deploy/staging.rb` and `config/deploy/production.rb` stage files.
 Use them to define stage specific configuration.
 
-If you receive the following error, make sure that you've required 'mina/multistage' in
-your `config/deploy.rb`
-
-```shell
-$ bundle exec mina multistage:init
-mina aborted!
-Don't know how to build task 'multistage:init'
-```
-
 ```rb
 # config/deploy/staging.rb
 set :domain, 'example.com'
@@ -72,6 +63,15 @@ set :repository, 'https://github.com/user/repo'
 set :branch, 'master'
 set :user, 'www'
 set :rails_env, 'staging'
+```
+
+If you receive the following error, make sure that you've required 'mina/multistage' in
+your `config/deploy.rb`
+
+```shell
+$ bundle exec mina multistage:init
+mina aborted!
+Don't know how to build task 'multistage:init'
 ```
 
 Now you can deploy the default stage with:
@@ -99,9 +99,9 @@ If you want to override the default values for any of these options, they should
 ```rb
 # config/deploy.rb
 
-set stages, %w(development test staging production)
-set stages_dir, 'config/deploy_stages'
-set default_stage, 'development'
+set :stages, %w(development test staging production)
+set :stages_dir, 'config/deploy_stages'
+set :default_stage, 'development'
 
 require 'mina/multistage'
 require 'mina/bundler'

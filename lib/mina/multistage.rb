@@ -12,7 +12,7 @@ def _stages_dir
 end
 
 def _all_stages_empty?
-  !fetch(:stages, nil)
+  !fetch(:all_stages, nil)
 end
 
 def _file_for_stage(stage_name)
@@ -28,12 +28,12 @@ def _get_all_stages
 end
 
 def _argument_included_in_stages?(arg)
-  stages.include?(arg)
+  all_stages.include?(arg)
 end
 
-set :stages, _get_all_stages if _all_stages_empty?
+set :all_stages, _get_all_stages if _all_stages_empty?
 
-stages.each do |name|
+all_stages.each do |name|
   desc "Set the target stage to '#{name}'."
   task(name) do
     set :stage, name

@@ -118,9 +118,9 @@ $ mina production deploy</pre></div>
 
 <div class="highlight highlight-rb"><pre><span class="pl-c"># config/deploy.rb</span>
 
-set stages, <span class="pl-s"><span class="pl-pds">%w(</span>development test staging production<span class="pl-pds">)</span></span>
-set stages_dir, <span class="pl-s"><span class="pl-pds">'</span>config/deploy_stages<span class="pl-pds">'</span></span>
-set default_stage, <span class="pl-s"><span class="pl-pds">'</span>development<span class="pl-pds">'</span></span>
+set :stages, <span class="pl-s"><span class="pl-pds">%w(</span>development test staging production<span class="pl-pds">)</span></span>
+set :stages_dir, <span class="pl-s"><span class="pl-pds">'</span>config/deploy_stages<span class="pl-pds">'</span></span>
+set :default_stage, <span class="pl-s"><span class="pl-pds">'</span>development<span class="pl-pds">'</span></span>
 
 <span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/multistage<span class="pl-pds">'</span></span>
 <span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">'</span>mina/bundler<span class="pl-pds">'</span></span>

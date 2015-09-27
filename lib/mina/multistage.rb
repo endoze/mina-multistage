@@ -42,7 +42,13 @@ all_stages.each do |name|
   end
 end
 
-invoke _default_stage if _stage_file_exists?(_default_stage) && !_argument_included_in_stages?(ARGV.first)
+_potential_stage = ARGV.first
+
+if _argument_included_in_stages?(_potential_stage)
+ invoke _potential_stage
+elsif _stage_file_exists?(_default_stage)
+ invoke _default_stage
+end
 
 namespace :multistage do
   desc 'Create stage files'

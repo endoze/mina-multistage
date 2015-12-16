@@ -44,7 +44,7 @@ end
 
 _potential_stage = ARGV.first
 
-if _argument_included_in_stages?(_potential_stage)
+if _stage_file_exists?(_potential_stage) && _argument_included_in_stages?(_potential_stage)
  invoke _potential_stage
 elsif _stage_file_exists?(_default_stage)
  invoke _default_stage

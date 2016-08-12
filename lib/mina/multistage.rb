@@ -33,11 +33,11 @@ end
 
 set :all_stages, _get_all_stages if _all_stages_empty?
 
-all_stages.each do |name|
+fetch(:all_stages).each do |name|
   desc "Set the target stage to '#{name}'."
   task(name) do
     set :stage, name
-    file = "#{_stages_dir}/#{stage}.rb"
+    file = "#{_stages_dir}/#{fetch(:stage)}.rb"
     load file
   end
 end

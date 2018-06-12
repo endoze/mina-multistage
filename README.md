@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/mina-multistage.png)](http://badge.fury.io/rb/mina-multistage) [![Stories in Ready](https://badge.waffle.io/Endoze/mina-multistage.png?label=ready)](https://waffle.io/Endoze/mina-multistage)  
+[![Gem Version](https://badge.fury.io/rb/mina-multistage.png)](http://badge.fury.io/rb/mina-multistage) [![Stories in Ready](https://badge.waffle.io/Endoze/mina-multistage.png?label=ready)](https://waffle.io/Endoze/mina-multistage)
 
 
 # Mina::Multistage
@@ -12,6 +12,12 @@ Add this line to your application's Gemfile:
 
 ```rb
 gem 'mina-multistage', require: false
+```
+
+The latest release of mina-multistage is to use with mina-1.0+. If you stick with old version of mina, use the 1.0.x branch of the gem:
+
+```rb
+gem 'mina-multistage', '~> 1.0.0', require: false
 ```
 
 And then execute:

@@ -28,7 +28,7 @@ def _get_all_stages
 end
 
 def _argument_included_in_stages?(arg)
-  all_stages.include?(arg)
+  fetch(:all_stages).include?(arg)
 end
 
 set :all_stages, _get_all_stages if _all_stages_empty?

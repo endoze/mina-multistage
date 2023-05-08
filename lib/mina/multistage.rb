@@ -20,7 +20,7 @@ def _file_for_stage(stage_name)
 end
 
 def _stage_file_exists?(stage_name)
-  File.exists?(File.expand_path(_file_for_stage(stage_name)))
+  File.exist?(File.expand_path(_file_for_stage(stage_name)))
 end
 
 def _get_all_stages
@@ -53,7 +53,7 @@ end
 namespace :multistage do
   desc 'Create stage files'
   task :init do
-    FileUtils.mkdir_p _stages_dir if !File.exists? _stages_dir
+    FileUtils.mkdir_p _stages_dir if !File.exist? _stages_dir
     _default_stages.each do |stage|
       stagefile = _file_for_stage(stage)
       if !_stage_file_exists?(stage)
